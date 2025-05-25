@@ -2,6 +2,7 @@ class BoostedNav extends HTMLElement {
   constructor() {
     super();
     this.parser = new DOMParser();
+    this.pageCache = new Map();
     this.clickHandler = this.clickHandler.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
   }
@@ -13,20 +14,34 @@ class BoostedNav extends HTMLElement {
     window.addEventListener("popstate", this.navigateBack);
   }
 
+  async fetchPage(url) {
+    if (this.pageCache.has(url)) {
+      return this.pageCache.get(url);
+    }
+
+    try {
+      const res = await fetch(url);
+      const html = await res.text();
+      this.pageCache.set(url, html);
+      return html;
+    } catch (e) {
+      console.error(`Error Fetching Page ${url}`, e);
+    }
+  }
+
   async clickHandler(e) {
     const link = e.target.closest("a");
     if (!link || !link.href.startsWith(location.origin)) return;
 
     e.preventDefault();
     try {
-      const res = await fetch(link.href);
-      const text = await res.text();
-      const doc = this.parser.parseFromString(text, "text/html");
+      const html = await this.fetchPage(link.href);
+      const doc = this.parser.parseFromString(html, "text/html");
 
       const fragment = doc.querySelector(this.targetSelector);
       if (fragment) {
         this.targetEle.innerHTML = fragment.innerHTML;
-        history.pushState({}, "", link.href);
+        history.pushState({ boosted: true }, "", link.href);
       }
     } catch (e) {
       console.error("Forward Nav Error:", e);
@@ -34,11 +49,9 @@ class BoostedNav extends HTMLElement {
   }
 
   async navigateBack(e) {
-    const url = location.pathname;
     try {
-      const res = await fetch(url);
-      const text = await res.text();
-      const doc = this.parser.parseFromString(text, "text/html");
+      const html = await this.fetchPage(location.pathname);
+      const doc = this.parser.parseFromString(html, "text/html");
 
       const fragment = doc.querySelector(this.targetSelector);
       if (fragment) {
