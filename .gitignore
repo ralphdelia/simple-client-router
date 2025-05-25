@@ -1,0 +1,21 @@
+# Bun cache and lockfile
+bun.lockb
+.bun/
+
+# Node modules (in case Bun installs some)
+node_modules/
+
+# macOS system files
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Optional: environment files
+.env
+.env.*
+
+# Build artifacts
+dist/
+build/
