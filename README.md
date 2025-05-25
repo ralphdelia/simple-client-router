@@ -1,16 +1,7 @@
-# csr-router
+## simple-client-router
+Project exploring MPA navigation using a web component implmentation `hx-boost`.
 
-To install dependencies:
-
-```bash
-bun install
+Start the development server with:
 ```
-
-To run:
-
-```bash
-bun run index.ts
+bun --watch src/index.tsx
 ```
-
-This project was created using `bun init` in bun v1.2.1. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
-# simple-client-router
