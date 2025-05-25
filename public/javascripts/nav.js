@@ -5,13 +5,18 @@ class BoostedNav extends HTMLElement {
     this.pageCache = new Map();
     this.clickHandler = this.clickHandler.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
+    this.handlePrefetch = this.handlePrefetch.bind(this);
   }
 
   connectedCallback() {
     this.targetSelector = this.getAttribute("target") || "main";
     this.targetEle = document.querySelector(this.targetSelector);
+
     this.addEventListener("click", this.clickHandler);
     window.addEventListener("popstate", this.navigateBack);
+    this.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("mouseenter", this.handlePrefetch);
+    });
   }
 
   async fetchPage(url) {
@@ -27,6 +32,12 @@ class BoostedNav extends HTMLElement {
     } catch (e) {
       console.error(`Error Fetching Page ${url}`, e);
     }
+  }
+
+  async handlePrefetch(e) {
+    const url = e.currentTarget.href;
+    if (this.pageCache.has(url)) return;
+    this.fetchPage(url);
   }
 
   async clickHandler(e) {
