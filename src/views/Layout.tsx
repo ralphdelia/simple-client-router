@@ -17,7 +17,7 @@ const Layout: FC = (props) => {
         <script src="/javascripts/nav.js" defer></script>
       </head>
       <body>
-        <nav>
+        <boosted-nav target="main">
           <ul>
             {navPages.map((page) => {
               return (
@@ -27,7 +27,7 @@ const Layout: FC = (props) => {
               );
             })}
           </ul>
-        </nav>
+        </boosted-nav>
         <main>{props.children}</main>
         <footer></footer>
       </body>
