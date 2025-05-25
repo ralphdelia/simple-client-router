@@ -28,7 +28,7 @@ const Layout: FC = (props) => {
             })}
           </ul>
         </boosted-nav>
-        <main>{props.children}</main>
+        {props.children}
         <footer></footer>
       </body>
     </html>

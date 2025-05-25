@@ -25,7 +25,7 @@ class BoostedNav extends HTMLElement {
     }
 
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, { headers: { "X-Boosted": "true" } });
       const html = await res.text();
       this.pageCache.set(url, html);
       return html;

@@ -10,17 +10,29 @@ import Page from "./views/pages/Page";
 const app = new Hono();
 
 app.use("*", serveStatic({ root: "./public" }));
+
+app.use("*", async (c, next) => {
+  const isBoosted = c.req.header("X-Boosted") === "true";
+  c.set("isBoosted", isBoosted);
+  await next();
+});
+
 app.use(
   "*",
-  jsxRenderer(({ children }) => <Layout>{children}</Layout>),
+  jsxRenderer(({ children }) => {
+    return <Layout>{children}</Layout>;
+  }),
 );
 
 app.get("/", (c) => {
-  return c.render(<HomePage />);
+  const page = <HomePage />;
+  console.log(c.get("isBoosted"));
+  return c.get("isBoosted") ? c.html(page) : c.render(page);
 });
 
 app.get("/page/:number", (c) => {
-  return c.render(<Page pageNumber={c.req.param("number")} />);
+  const page = <Page pageNumber={c.req.param("number")} />;
+  return c.get("isBoosted") ? c.html(page) : c.render(page);
 });
 
 export default app;

@@ -1,7 +1,10 @@
 const Page = ({ pageNumber }: { pageNumber: number | string }) => {
   return (
     <>
-      <h1>Page: {pageNumber}</h1>
+      <main>
+        <h1>Page: {pageNumber}</h1>
+        <p>{`${pageNumber}`.repeat(10)}</p>
+      </main>
     </>
   );
 };
